@@ -11,11 +11,16 @@ public class CriarUsuarioValidator : AbstractValidator<Usuario>
             .MaximumLength(50).WithMessage("O nome não pode passar de 50 caracteres");
 
         RuleFor(usuario => usuario.Email)
-            .NotEmpty().WithMessage("O e-mail é obrigatório")
-            .EmailAddress().WithMessage("Precisa ser um e-mail válido");
+            .NotEmpty().WithMessage("O Email é obrigatório");
+
+        When(usuario => !string.IsNullOrEmpty(usuario.Email), () =>
+        {
+            RuleFor(usuario => usuario.Email)
+                .EmailAddress().WithMessage("O Email deve ser válido.");
+        });
 
         RuleFor(usuario => usuario.Idade)
             .NotEmpty().WithMessage("A idade é ogrigatória")
-            .LessThanOrEqualTo(100).WithMessage("A idade do usuário não pode ser maior que 100 anos");
+            .GreaterThanOrEqualTo(18).WithMessage("A idade deve ser maior ou igual a 18 anos");
     }
 }
